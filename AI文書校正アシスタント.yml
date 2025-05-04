@@ -1,0 +1,180 @@
+app:
+  description: ビジネス文書の校正を自動化するアプリです。文書の構成、文体の一貫性、敬語の使用、誤字脱字などを分析し、改善案を提示します。
+  icon: 🤖
+  icon_background: '#FFEAD5'
+  mode: workflow
+  name: AI文書校正アシスタント
+  use_icon_as_answer_icon: false
+dependencies:
+- current_identifier: null
+  type: marketplace
+  value:
+    marketplace_plugin_unique_identifier: langgenius/openai:0.0.7@11ec0b1909200f62b6ebf2cec1da981a9071d11c1ee0e2ef332ce89bcffa2544
+kind: app
+version: 0.2.0
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload:
+      allowed_file_extensions:
+      - .JPG
+      - .JPEG
+      - .PNG
+      - .GIF
+      - .WEBP
+      - .SVG
+      allowed_file_types:
+      - image
+      allowed_file_upload_methods:
+      - local_file
+      - remote_url
+      enabled: false
+      fileUploadConfig:
+        audio_file_size_limit: 50
+        batch_count_limit: 5
+        file_size_limit: 15
+        image_file_size_limit: 10
+        video_file_size_limit: 100
+        workflow_file_upload_limit: 10
+      image:
+        enabled: false
+        number_limits: 3
+        transfer_methods:
+        - local_file
+        - remote_url
+      number_limits: 3
+    opening_statement: ''
+    retriever_resource:
+      enabled: true
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions: []
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: start
+        targetType: llm
+      id: 1746343161750-source-1746343169085-target
+      source: '1746343161750'
+      sourceHandle: source
+      target: '1746343169085'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: llm
+        targetType: end
+      id: 1746343169085-source-1746343172160-target
+      source: '1746343169085'
+      sourceHandle: source
+      target: '1746343172160'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    nodes:
+    - data:
+        desc: ''
+        selected: false
+        title: 開始
+        type: start
+        variables:
+        - label: 校正したい文書を入力してください
+          max_length: 100000
+          options: []
+          required: true
+          type: paragraph
+          variable: input_text
+      height: 88
+      id: '1746343161750'
+      position:
+        x: 80
+        y: 282
+      positionAbsolute:
+        x: 80
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        model:
+          completion_params: {}
+          mode: chat
+          name: gpt-4-turbo
+          provider: langgenius/openai/openai
+        prompt_template:
+        - id: 53e481e5-9aaf-4ecd-8287-d5ed276e3d4a
+          role: system
+          text: "あなたはビジネス文書の校正と改善を行う専門家です。\n入力された文書に対して以下の観点で分析と改善を行ってください：\n\n1.\
+            \ 文書構成の適切性\n   - 文書の種類に応じた必要な要素が含まれているか\n   - 内容の順序や段落の区切りは適切か\n   - 箇条書きなどの書式は統一されているか\n\
+            \n2. 文体の一貫性\n   - 文末表現は統一されているか\n   - 敬語の使い方は適切か\n   - 全体的な文体は一貫しているか\n\
+            \n3. ビジネス文書としての表現の適切さ\n   - 適切な敬語や丁寧な表現が使われているか\n   - 口語的な表現や不適切な言い回しはないか\n\
+            \   - 曖昧な表現や不適切な省略はないか\n\n4. 誤字脱字や文法の問題\n   - 漢字やひらがなの使い分けは適切か\n   - 同じ言葉の表記は統一されているか\n\
+            \   - 句読点の使い方は適切か\n\n5. 分かりやすさ、簡潔さ\n   - 文章の流れは分かりやすいか\n   - 不必要な重複や冗長な表現はないか\n\
+            \   - 重要なポイントは明確に伝わるか\n\n### 現在の文書\n{{#1746343161750.input_text#}}\n\n\
+            ### 分析\n上記の各観点について、問題点を箇条書きで示します。\n\n### 改善案\n問題点を修正した文書を示します。\n\n###\
+            \ 解説\n主な修正のポイントについて説明します。"
+        selected: false
+        title: LLM
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 88
+      id: '1746343169085'
+      position:
+        x: 383
+        y: 282
+      positionAbsolute:
+        x: 383
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        desc: ''
+        outputs:
+        - value_selector:
+          - '1746343169085'
+          - text
+          variable: llm_output
+        selected: false
+        title: 終了
+        type: end
+      height: 88
+      id: '1746343172160'
+      position:
+        x: 686
+        y: 282
+      positionAbsolute:
+        x: 686
+        y: 282
+      selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    viewport:
+      x: -16.61108363900958
+      y: 132.05555948014148
+      zoom: 1
