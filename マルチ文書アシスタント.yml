@@ -1,0 +1,420 @@
+app:
+  description: このアプリは、ユーザーの目的に応じて処理を自動で切り替えられる多機能文書処理システムです。IF/ELSEノードで文書校正と報告書作成の2つの処理を分岐させ、変数集約ノードで結果を統合し、テンプレートノードで出力を整形します。1つのアプリで複数の目的に対応できる柔軟な設計となっています。
+  icon: 🤖
+  icon_background: '#FFEAD5'
+  mode: workflow
+  name: マルチ文書アシスタント
+  use_icon_as_answer_icon: false
+dependencies:
+- current_identifier: null
+  type: marketplace
+  value:
+    marketplace_plugin_unique_identifier: langgenius/openai:0.0.7@11ec0b1909200f62b6ebf2cec1da981a9071d11c1ee0e2ef332ce89bcffa2544
+kind: app
+version: 0.2.0
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload:
+      allowed_file_extensions:
+      - .JPG
+      - .JPEG
+      - .PNG
+      - .GIF
+      - .WEBP
+      - .SVG
+      allowed_file_types:
+      - image
+      allowed_file_upload_methods:
+      - local_file
+      - remote_url
+      enabled: false
+      fileUploadConfig:
+        audio_file_size_limit: 50
+        batch_count_limit: 5
+        file_size_limit: 15
+        image_file_size_limit: 10
+        video_file_size_limit: 100
+        workflow_file_upload_limit: 10
+      image:
+        enabled: false
+        number_limits: 3
+        transfer_methods:
+        - local_file
+        - remote_url
+      number_limits: 3
+    opening_statement: ''
+    retriever_resource:
+      enabled: true
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions: []
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: start
+        targetType: if-else
+      id: 1746347247104-source-1746347341107-target
+      source: '1746347247104'
+      sourceHandle: source
+      target: '1746347341107'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: if-else
+        targetType: llm
+      id: 1746347341107-true-1746347434716-target
+      source: '1746347341107'
+      sourceHandle: 'true'
+      target: '1746347434716'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: if-else
+        targetType: llm
+      id: 1746347341107-ae05b59f-d18f-4a3e-a35b-89510933a079-1746347501422-target
+      source: '1746347341107'
+      sourceHandle: ae05b59f-d18f-4a3e-a35b-89510933a079
+      target: '1746347501422'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: llm
+        targetType: variable-aggregator
+      id: 1746347434716-source-1746347548589-target
+      source: '1746347434716'
+      sourceHandle: source
+      target: '1746347548589'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: llm
+        targetType: variable-aggregator
+      id: 1746347501422-source-1746347548589-target
+      source: '1746347501422'
+      sourceHandle: source
+      target: '1746347548589'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: variable-aggregator
+        targetType: template-transform
+      id: 1746347548589-source-1746347645712-target
+      source: '1746347548589'
+      sourceHandle: source
+      target: '1746347645712'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: template-transform
+        targetType: end
+      id: 1746347645712-source-1746347910220-target
+      source: '1746347645712'
+      sourceHandle: source
+      target: '1746347910220'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    nodes:
+    - data:
+        desc: ''
+        selected: false
+        title: 開始
+        type: start
+        variables:
+        - label: 構成したい文書を入力してください
+          max_length: 10000
+          options: []
+          required: true
+          type: paragraph
+          variable: input_text
+        - label: 処理タイプを選択してください
+          max_length: 48
+          options:
+          - 文書の校正をする
+          - 報告書を作成する
+          required: true
+          type: select
+          variable: document_type
+      height: 114
+      id: '1746347247104'
+      position:
+        x: 80
+        y: 282
+      positionAbsolute:
+        x: 80
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        cases:
+        - case_id: 'true'
+          conditions:
+          - comparison_operator: contains
+            id: 2e5257fd-42a6-4468-8042-fb8f99f9d706
+            value: 校正
+            varType: string
+            variable_selector:
+            - '1746347247104'
+            - document_type
+          id: 'true'
+          logical_operator: and
+        - case_id: ae05b59f-d18f-4a3e-a35b-89510933a079
+          conditions:
+          - comparison_operator: contains
+            id: 6503765b-99fe-44c4-8cb9-2536e89285b0
+            value: 報告書
+            varType: string
+            variable_selector:
+            - '1746347247104'
+            - document_type
+          logical_operator: and
+        desc: ''
+        selected: false
+        title: IF/ELSE
+        type: if-else
+      height: 172
+      id: '1746347341107'
+      position:
+        x: 383
+        y: 282
+      positionAbsolute:
+        x: 383
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        model:
+          completion_params: {}
+          mode: chat
+          name: gpt-4-turbo
+          provider: langgenius/openai/openai
+        prompt_template:
+        - id: b6b426bd-1cff-4420-8062-7a0f5421b261
+          role: system
+          text: "あなたはビジネス文書の校正と改善を行う専門家です。\n入力された文書に対して以下の観点で分析と改善を行ってください：\n\n1.\
+            \ 文書構成の適切性\n   - 文書の種類に応じた必要な要素が含まれているか\n   - 内容の順序や段落の区切りは適切か\n   - 箇条書きなどの書式は統一されているか\n\
+            \n2. 文体の一貫性\n   - 文末表現は統一されているか\n   - 敬語の使い方は適切か\n   - 全体的な文体は一貫しているか\n\
+            \n3. ビジネス文書としての表現の適切さ\n   - 適切な敬語や丁寧な表現が使われているか\n   - 口語的な表現や不適切な言い回しはないか\n\
+            \   - 曖昧な表現や不適切な省略はないか\n\n4. 誤字脱字や文法の問題\n   - 漢字やひらがなの使い分けは適切か\n   - 同じ言葉の表記は統一されているか\n\
+            \   - 句読点の使い方は適切か\n\n5. 分かりやすさ、簡潔さ\n   - 文章の流れは分かりやすいか\n   - 不必要な重複や冗長な表現はないか\n\
+            \   - 重要なポイントは明確に伝わるか\n\n### 現在の文書\n{{#1746347247104.input_text#}}\n\n\
+            ### 分析\n上記の各観点について、問題点を箇条書きで示します。\n\n### 改善案\n問題点を修正した文書を示します。\n\n###\
+            \ 解説\n主な修正のポイントについて説明します。"
+        selected: false
+        title: 校正用LLM
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 88
+      id: '1746347434716'
+      position:
+        x: 686
+        y: 282
+      positionAbsolute:
+        x: 686
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        model:
+          completion_params: {}
+          mode: chat
+          name: gpt-4-turbo
+          provider: langgenius/openai/openai
+        prompt_template:
+        - id: 78b6209e-1a60-4071-95a4-53f689728faa
+          role: system
+          text: 'あなたは報告書作成のプロフェッショナルです。以下の特徴を持つ報告書を作成してください：
+
+
+            - 簡潔な要約を冒頭に配置
+
+            - 目的、方法、結果、考察の明確な区分け
+
+            - データや事実に基づく客観的な記述
+
+            - 具体的な数値やエビデンスの活用
+
+            - 簡潔で明瞭な文章表現
+
+            - 次のアクションや提言の明示
+
+
+            ### 報告書フォーマット
+
+            1. エグゼクティブサマリー
+
+            2. 背景と目的
+
+            3. 内容詳細
+
+            4. 結論と提言
+
+
+            ### 元の文章
+
+            {{#1746347247104.input_text#}}'
+        selected: false
+        title: 報告書用LLM
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 88
+      id: '1746347501422'
+      position:
+        x: 686
+        y: 409
+      positionAbsolute:
+        x: 686
+        y: 409
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        advanced_settings:
+          group_enabled: false
+          groups:
+          - groupId: 096908e9-54bc-40c6-8e41-0e098a7983ed
+            group_name: Group1
+            output_type: string
+            variables:
+            - - '1746347434716'
+              - text
+            - - '1746347501422'
+              - text
+        desc: ''
+        output_type: string
+        selected: false
+        title: 変数集約器
+        type: variable-aggregator
+        variables:
+        - - '1746347434716'
+          - text
+        - - '1746347501422'
+          - text
+      height: 129
+      id: '1746347548589'
+      position:
+        x: 989
+        y: 282
+      positionAbsolute:
+        x: 989
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        desc: ''
+        selected: false
+        template: "{% if document_type == \"文書の校正をする\" %}\r\n# 文書校正結果\r\n\r\n## オリジナル文書\r\
+          \n{{content}}\r\n\r\n## 校正結果\r\n{{llm_output}}\r\n\r\n---\r\n※上記の校正結果は AI\
+          \ による提案です。\r\n文脈や意図に応じて適切に判断してください。\r\n\r\n{% else %}\r\n# 報告書作成結果\r\n\r\
+          \n{{llm_output}}\r\n\r\n---\r\n※この報告書は AI により自動生成されています。\r\n内容の確認と必要に応じた編集をお願いします。\r\
+          \n{% endif %}"
+        title: テンプレート
+        type: template-transform
+        variables:
+        - value_selector:
+          - '1746347548589'
+          - output
+          variable: llm_output
+        - value_selector:
+          - '1746347247104'
+          - input_text
+          variable: content
+        - value_selector:
+          - '1746347247104'
+          - document_type
+          variable: document_type
+      height: 52
+      id: '1746347645712'
+      position:
+        x: 1292
+        y: 282
+      positionAbsolute:
+        x: 1292
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        desc: ''
+        outputs:
+        - value_selector:
+          - '1746347645712'
+          - output
+          variable: template_output
+        selected: false
+        title: 終了
+        type: end
+      height: 88
+      id: '1746347910220'
+      position:
+        x: 1595
+        y: 282
+      positionAbsolute:
+        x: 1595
+        y: 282
+      selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    viewport:
+      x: -1168
+      y: 201.5
+      zoom: 1
