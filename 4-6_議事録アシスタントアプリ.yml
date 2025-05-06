@@ -1,0 +1,497 @@
+app:
+  description: 音声ファイルから自動で議事録を作成し、会議内容に関する質問に回答できるAIアプリケーションです。OpenAIのWhisperモデルで音声を文字起こしし、その内容をもとに議事録を作成。さらに、会議の内容について質問すると、AIが文脈を理解して回答してくれます。
+  icon: 🤖
+  icon_background: '#FFEAD5'
+  mode: advanced-chat
+  name: 議事録アシスタントアプリ
+  use_icon_as_answer_icon: false
+dependencies:
+- current_identifier: null
+  type: marketplace
+  value:
+    marketplace_plugin_unique_identifier: langgenius/openai:0.0.7@11ec0b1909200f62b6ebf2cec1da981a9071d11c1ee0e2ef332ce89bcffa2544
+kind: app
+version: 0.2.0
+workflow:
+  conversation_variables:
+  - description: 文字起こしの内容を保存する変数
+    id: 8b1583a7-5a3b-4215-836b-2a0c85b06c51
+    name: transcription
+    selector:
+    - conversation
+    - transcription
+    value: ''
+    value_type: string
+  environment_variables: []
+  features:
+    file_upload:
+      allowed_file_extensions:
+      - .JPG
+      - .JPEG
+      - .PNG
+      - .GIF
+      - .WEBP
+      - .SVG
+      allowed_file_types:
+      - image
+      allowed_file_upload_methods:
+      - local_file
+      - remote_url
+      enabled: false
+      fileUploadConfig:
+        audio_file_size_limit: 50
+        batch_count_limit: 5
+        file_size_limit: 15
+        image_file_size_limit: 10
+        video_file_size_limit: 100
+        workflow_file_upload_limit: 10
+      image:
+        enabled: false
+        number_limits: 3
+        transfer_methods:
+        - local_file
+        - remote_url
+      number_limits: 3
+    opening_statement: '議事録アシスタントです🤖
+
+      最初に議事録を作成してください。'
+    retriever_resource:
+      enabled: true
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions:
+    - 議事録を作成する
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: if-else
+        targetType: llm
+      id: 1746532055429-false-1746532113547-target
+      source: '1746532055429'
+      sourceHandle: 'false'
+      target: '1746532113547'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: llm
+        targetType: answer
+      id: 1746532113547-source-1746532131549-target
+      source: '1746532113547'
+      sourceHandle: source
+      target: '1746532131549'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: tool
+        targetType: assigner
+      id: 1746532101715-source-1746532250239-target
+      source: '1746532101715'
+      sourceHandle: source
+      target: '1746532250239'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: assigner
+        targetType: llm
+      id: 1746532250239-source-1746532361901-target
+      source: '1746532250239'
+      sourceHandle: source
+      target: '1746532361901'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: llm
+        targetType: answer
+      id: 1746532361901-source-1746532400831-target
+      source: '1746532361901'
+      sourceHandle: source
+      target: '1746532400831'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: if-else
+        targetType: tool
+      id: 1746532055429-true-1746532101715-target
+      source: '1746532055429'
+      sourceHandle: 'true'
+      target: '1746532101715'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: start
+        targetType: if-else
+      id: 1746532017788-source-1746532055429-target
+      source: '1746532017788'
+      sourceHandle: source
+      target: '1746532055429'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    nodes:
+    - data:
+        desc: ''
+        selected: false
+        title: 開始
+        type: start
+        variables:
+        - allowed_file_extensions: []
+          allowed_file_types:
+          - audio
+          allowed_file_upload_methods:
+          - local_file
+          - remote_url
+          label: 音声ファイル
+          max_length: 48
+          options: []
+          required: true
+          type: file
+          variable: audio
+      height: 88
+      id: '1746532017788'
+      position:
+        x: -111
+        y: 282
+      positionAbsolute:
+        x: -111
+        y: 282
+      selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        cases:
+        - case_id: 'true'
+          conditions:
+          - comparison_operator: '='
+            id: b157b28a-c7f2-4f50-9d26-4b749efc0947
+            value: '0'
+            varType: number
+            variable_selector:
+            - sys
+            - dialogue_count
+          id: 'true'
+          logical_operator: and
+        desc: ''
+        selected: false
+        title: IF/ELSE
+        type: if-else
+      height: 124
+      id: '1746532055429'
+      position:
+        x: 383
+        y: 282
+      positionAbsolute:
+        x: 383
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        desc: ''
+        is_team_authorization: true
+        output_schema: null
+        paramSchemas:
+        - auto_generate: null
+          default: null
+          form: llm
+          human_description:
+            en_US: The audio file to be converted.
+            ja_JP: The audio file to be converted.
+            pt_BR: The audio file to be converted.
+            zh_Hans: 要转换的音频文件。
+          label:
+            en_US: Audio File
+            ja_JP: Audio File
+            pt_BR: Audio File
+            zh_Hans: 音频文件
+          llm_description: The audio file to be converted.
+          max: null
+          min: null
+          name: audio_file
+          options: []
+          placeholder: null
+          precision: null
+          required: true
+          scope: null
+          template: null
+          type: file
+        - auto_generate: null
+          default: null
+          form: form
+          human_description:
+            en_US: All available ASR models. You can config model in the Model Provider
+              of Settings.
+            ja_JP: All available ASR models. You can config model in the Model Provider
+              of Settings.
+            pt_BR: All available ASR models. You can config model in the Model Provider
+              of Settings.
+            zh_Hans: 所有可用的 ASR 模型。你可以在设置中的模型供应商里配置。
+          label:
+            en_US: Model
+            ja_JP: Model
+            pt_BR: Model
+            zh_Hans: Model
+          llm_description: null
+          max: null
+          min: null
+          name: model
+          options:
+          - label:
+              en_US: whisper-1(langgenius/openai/openai)
+              ja_JP: whisper-1(langgenius/openai/openai)
+              pt_BR: whisper-1(langgenius/openai/openai)
+              zh_Hans: whisper-1(langgenius/openai/openai)
+            value: langgenius/openai/openai#whisper-1
+          placeholder: null
+          precision: null
+          required: true
+          scope: null
+          template: null
+          type: select
+        params:
+          audio_file: ''
+          model: ''
+        provider_id: audio
+        provider_name: audio
+        provider_type: builtin
+        selected: false
+        title: Speech To Text
+        tool_configurations:
+          model: langgenius/openai/openai#whisper-1
+        tool_description: Convert audio file to text.
+        tool_label: Speech To Text
+        tool_name: asr
+        tool_parameters:
+          audio_file:
+            type: variable
+            value:
+            - '1746532017788'
+            - audio
+        type: tool
+      height: 88
+      id: '1746532101715'
+      position:
+        x: 686
+        y: 282
+      positionAbsolute:
+        x: 686
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: gpt-4o-2024-05-13
+          provider: langgenius/openai/openai
+        prompt_template:
+        - id: 50c05ee4-e174-4a89-8adb-e793f97dd95c
+          role: system
+          text: 'あなたは音声コンテンツの分析スペシャリストです。与えられた文字起こしデータを元に、ユーザーからの様々な質問や要望に正確に応答してください。
+
+
+            ### 文字起こしデータ
+
+            {{#conversation.transcription#}}
+
+
+            ### 応答の基本方針
+
+            - 常に文字起こしの内容に基づいて回答すること
+
+            - 推測や外部知識による補完は避けること
+
+            - 要約や抽出を行う際は、重要度や関連性を考慮すること
+
+            - 明確な根拠（発言内容の引用など）を含めること
+
+            - 必要に応じて、どの部分の発言かを明示すること'
+        selected: false
+        title: LLM
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 88
+      id: '1746532113547'
+      position:
+        x: 686
+        y: 409
+      positionAbsolute:
+        x: 686
+        y: 409
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        answer: '{{#1746532113547.text#}}'
+        desc: ''
+        selected: false
+        title: 回答
+        type: answer
+        variables: []
+      height: 103
+      id: '1746532131549'
+      position:
+        x: 989
+        y: 409
+      positionAbsolute:
+        x: 989
+        y: 409
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        desc: ''
+        items:
+        - input_type: variable
+          operation: over-write
+          value:
+          - '1746532101715'
+          - text
+          variable_selector:
+          - conversation
+          - transcription
+          write_mode: over-write
+        selected: false
+        title: 変数代入
+        type: assigner
+        version: '2'
+      height: 86
+      id: '1746532250239'
+      position:
+        x: 989
+        y: 282
+      positionAbsolute:
+        x: 989
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: gpt-4o-2024-05-13
+          provider: langgenius/openai/openai
+        prompt_template:
+        - id: 4a1984be-3f0a-4320-a050-fff900d1121a
+          role: system
+          text: "あなたは議事録作成のエキスパートです。文字起こしデータから、簡潔で分かりやすい議事録を作成してください。また、不明確な点や補足が必要な情報がある場合は、その旨を議事録に明記してください。\n\
+            \n### 文字起こしデータ\n{{#1746532101715.text#}}\n\n### 議事録作成の基本方針\n- 客観的な事実を正確に記録\n\
+            - 重要な決定事項や合意事項を明確に記載（**太字**で強調）\n- 冗長な表現や余分な情報は省略し、要点を簡潔に記載\n- 時系列に沿って整理\n\
+            - 発言者の意図や文脈を考慮した適切な要約\n- 検討中の事項と決定済みの事項を明確に区別\n- アクションアイテムは具体的な実行内容と期限を明記\n\
+            \n### 出力フォーマット\n\U0001F4C5 開催概要\n- 会議名：\n- 開催日時：\n- 開催形式：\n- 参加者：\n- 司会者：\n\
+            - 書記：\n\n\U0001F4CB 議題一覧\n1. [議題1]\n2. [議題2]\n...\n\n\U0001F4AC 議事内容\n\
+            【議題1】\n- 議論の背景：\n- 主な論点：\n- 意見交換内容：\n- 決定事項：\n- 保留事項：\n\n【議題2】\n[同様のフォーマット]\n\
+            ...\n\n✅ アクションアイテム\n優先度「高」\n- 担当者：[担当者名]\n  - タスク：[具体的な内容]\n  - 期限：[完了期限]\n\
+            \  - 関連部署：[必要に応じて]\n\n優先度「中」「低」\n[同様のフォーマット]\n\n\U0001F4DD 補足・特記事項\n-\
+            \ 次回会議予定：\n- 未解決の課題：\n- その他特記事項：\n\n### 留意事項\n- 不明確な情報や補足が必要な点は、「※」マークを付けて明記\n\
+            - 専門用語は初出時に簡単な説明を追記\n- 機密情報や個人情報は適切な形に置き換えて記載\n- 重要な数値やデータは表形式で整理"
+        selected: false
+        title: 議事録作成LLM
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 88
+      id: '1746532361901'
+      position:
+        x: 1292
+        y: 282
+      positionAbsolute:
+        x: 1292
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        answer: '{{#1746532361901.text#}}
+
+
+          ---
+
+
+          💬 議事録作成が完了しました。
+
+
+          以下のような質問や要望を入力してください：
+
+          - 重要なポイントを箇条書きで教えて
+
+          - 次回に向けて課題や宿題は？
+
+
+          ※ 音声データは保存されていますので、何度でも異なる観点から分析できます。'
+        desc: ''
+        selected: false
+        title: 回答 2
+        type: answer
+        variables: []
+      height: 199
+      id: '1746532400831'
+      position:
+        x: 1595
+        y: 282
+      positionAbsolute:
+        x: 1595
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    viewport:
+      x: 20.5
+      y: -17.5
+      zoom: 1
