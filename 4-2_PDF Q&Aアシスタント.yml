@@ -1,0 +1,341 @@
+app:
+  description: PDFファイルの内容に基づいてQ&Aができるチャットアプリです。アップロードしたPDFの内容を読み込み、ユーザーからの質問に対して適切な回答を生成します。社内規約の確認など、ドキュメントの内容を効率的に把握したい場合に便利なツールです。
+  icon: 🤖
+  icon_background: '#FFEAD5'
+  mode: advanced-chat
+  name: PDF Q&Aアシスタント
+  use_icon_as_answer_icon: false
+dependencies:
+- current_identifier: null
+  type: marketplace
+  value:
+    marketplace_plugin_unique_identifier: langgenius/openai:0.0.7@11ec0b1909200f62b6ebf2cec1da981a9071d11c1ee0e2ef332ce89bcffa2544
+kind: app
+version: 0.2.0
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload:
+      allowed_file_extensions:
+      - .JPG
+      - .JPEG
+      - .PNG
+      - .GIF
+      - .WEBP
+      - .SVG
+      allowed_file_types:
+      - document
+      allowed_file_upload_methods:
+      - local_file
+      - remote_url
+      enabled: false
+      fileUploadConfig:
+        audio_file_size_limit: 50
+        batch_count_limit: 5
+        file_size_limit: 15
+        image_file_size_limit: 10
+        video_file_size_limit: 100
+        workflow_file_upload_limit: 10
+      image:
+        enabled: false
+      number_limits: 3
+    opening_statement: PDF Q&Aアシスタントです🤖
+    retriever_resource:
+      enabled: true
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions:
+    - まずはこちらを押して注意事項などを読んでください
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: start
+        targetType: if-else
+      id: 1746517687301-source-1746517894698-target
+      source: '1746517687301'
+      sourceHandle: source
+      target: '1746517894698'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: if-else
+        targetType: answer
+      id: 1746517894698-false-1746517945351-target
+      source: '1746517894698'
+      sourceHandle: 'false'
+      target: '1746517945351'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: if-else
+        targetType: document-extractor
+      id: 1746517894698-true-1746517966449-target
+      source: '1746517894698'
+      sourceHandle: 'true'
+      target: '1746517966449'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: document-extractor
+        targetType: llm
+      id: 1746517966449-source-1746518012730-target
+      source: '1746517966449'
+      sourceHandle: source
+      target: '1746518012730'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: llm
+        targetType: answer
+      id: 1746518012730-source-1746518330011-target
+      source: '1746518012730'
+      sourceHandle: source
+      target: '1746518330011'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    nodes:
+    - data:
+        desc: ''
+        selected: false
+        title: 開始
+        type: start
+        variables:
+        - allowed_file_extensions: []
+          allowed_file_types:
+          - document
+          allowed_file_upload_methods:
+          - local_file
+          - remote_url
+          label: PDFファイル
+          max_length: 48
+          options: []
+          required: true
+          type: file
+          variable: pdf_file
+      height: 89
+      id: '1746517687301'
+      position:
+        x: 80
+        y: 282
+      positionAbsolute:
+        x: 80
+        y: 282
+      selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        cases:
+        - case_id: 'true'
+          conditions:
+          - comparison_operator: '>'
+            id: fbd171c1-0c30-479b-8186-81861d54fb6b
+            value: '0'
+            varType: number
+            variable_selector:
+            - sys
+            - dialogue_count
+          id: 'true'
+          logical_operator: and
+        desc: ''
+        selected: false
+        title: IF/ELSE
+        type: if-else
+      height: 125
+      id: '1746517894698'
+      position:
+        x: 384
+        y: 282
+      positionAbsolute:
+        x: 384
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        answer: '<div style="max-width: 800px; margin: 0 auto;">
+
+          <div style="background-color: #f0f9ff; padding: 20px; border-radius: 8px;
+          margin-bottom: 20px;">
+
+          <h3 style="color: #1e40af; margin: 0 0 15px;">📚 PDF Q&Aアシスタント</h3>
+
+          <p style="margin: 0 0 15px; color: #334155;">
+
+          このアプリでは、PDFファイルの内容について自由に質問することができます。
+
+          アップロードされたPDFの内容を理解し、あなたの質問に対して具体的な回答を提供します。
+
+          </p>
+
+
+          <h3 style="color: #1e40af; margin: 0 0 15px;">💡 効果的な質問例</h3>
+
+          <p style="margin: 0 0 15px; color: #334155;">
+
+          ・〇〇について書かれている箇所を教えてください<br>
+
+          ・〇〇という用語の定義について説明してください<br>
+
+          ・このPDFの結論を示してください
+
+          </p>
+
+
+          <h3 style="color: #1e40af; margin: 0 0 15px;">⚠️ 注意点</h3>
+
+          <p style="margin: 0 0 15px; color: #334155;">
+
+          ・PDFに含まれていない情報については回答できません<br>
+
+          ・画像やグラフの詳細な解析はできない場合があります<br>
+
+          ・長大なPDFの場合、処理に時間がかかることがあります<br>
+
+          ・機密情報を含むPDFはアップロードしないでください
+
+          </p>'
+        desc: ''
+        selected: false
+        title: 使い方の説明
+        type: answer
+        variables: []
+      height: 517
+      id: '1746517945351'
+      position:
+        x: 672
+        y: 392
+      positionAbsolute:
+        x: 672
+        y: 392
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        desc: ''
+        is_array_file: false
+        selected: false
+        title: テキスト抽出ツール
+        type: document-extractor
+        variable_selector:
+        - '1746517687301'
+        - pdf_file
+      height: 91
+      id: '1746517966449'
+      position:
+        x: 672
+        y: 311.3990420656329
+      positionAbsolute:
+        x: 672
+        y: 311.3990420656329
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: gpt-4o-2024-05-13
+          provider: langgenius/openai/openai
+        prompt_template:
+        - id: 8ca834f9-5cbc-45f9-bca4-4c592e1d1a1f
+          role: system
+          text: 'あなたはPDFドキュメントの内容について質問に答えるアシスタントです。
+
+            ユーザーの入力に対して制約事項に従い適切に対応してください。
+
+
+            ### 制約事項
+
+            - PDFの内容に基づいて正確に回答してください
+
+            - PDFに記載されていない内容は「その情報はPDFには記載されていません」と伝えてください
+
+            - 回答の根拠となる部分があれば、引用を示してください
+
+            - 回答は簡潔かつ分かりやすく構成してください
+
+
+            ### PDFの内容
+
+            {{#1746517966449.text#}}
+
+            '
+        selected: false
+        title: LLM
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 89
+      id: '1746518012730'
+      position:
+        x: 976
+        y: 311.3990420656329
+      positionAbsolute:
+        x: 976
+        y: 311.3990420656329
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        answer: '{{#1746518012730.text#}}'
+        desc: ''
+        selected: false
+        title: 回答 2
+        type: answer
+        variables: []
+      height: 104
+      id: '1746518330011'
+      position:
+        x: 1280
+        y: 311.3990420656329
+      positionAbsolute:
+        x: 1280
+        y: 311.3990420656329
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    viewport:
+      x: -275.0000000000001
+      y: -89.00000000000023
+      zoom: 1.0000000000000002
