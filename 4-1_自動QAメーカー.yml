@@ -1,0 +1,288 @@
+app:
+  description: このアプリは、PDFファイルをアップロードすると、その内容から自動的に想定される質問と回答のセット（FAQ）を生成します。生成するFAQの数を指定でき、現在の日付も自動で付与されるため、説明資料やドキュメントの補足資料として活用できます。
+  icon: 🤖
+  icon_background: '#FFEAD5'
+  mode: workflow
+  name: 4-1_自動QAメーカー
+  use_icon_as_answer_icon: false
+dependencies:
+- current_identifier: null
+  type: marketplace
+  value:
+    marketplace_plugin_unique_identifier: langgenius/openai:0.0.7@11ec0b1909200f62b6ebf2cec1da981a9071d11c1ee0e2ef332ce89bcffa2544
+kind: app
+version: 0.2.0
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload:
+      allowed_file_extensions:
+      - .JPG
+      - .JPEG
+      - .PNG
+      - .GIF
+      - .WEBP
+      - .SVG
+      allowed_file_types:
+      - image
+      allowed_file_upload_methods:
+      - local_file
+      - remote_url
+      enabled: false
+      fileUploadConfig:
+        audio_file_size_limit: 50
+        batch_count_limit: 5
+        file_size_limit: 15
+        image_file_size_limit: 10
+        video_file_size_limit: 100
+        workflow_file_upload_limit: 10
+      image:
+        enabled: false
+        number_limits: 3
+        transfer_methods:
+        - local_file
+        - remote_url
+      number_limits: 3
+    opening_statement: ''
+    retriever_resource:
+      enabled: true
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions: []
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: start
+        targetType: document-extractor
+      id: 1746516664325-source-1746516745342-target
+      source: '1746516664325'
+      sourceHandle: source
+      target: '1746516745342'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: document-extractor
+        targetType: llm
+      id: 1746516745342-source-1746516841899-target
+      source: '1746516745342'
+      sourceHandle: source
+      target: '1746516841899'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: llm
+        targetType: template-transform
+      id: 1746516841899-source-1746517307602-target
+      source: '1746516841899'
+      sourceHandle: source
+      target: '1746517307602'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: template-transform
+        targetType: end
+      id: 1746517307602-source-1746516925013-target
+      source: '1746517307602'
+      sourceHandle: source
+      target: '1746516925013'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    nodes:
+    - data:
+        desc: ''
+        selected: false
+        title: 開始
+        type: start
+        variables:
+        - allowed_file_extensions: []
+          allowed_file_types:
+          - document
+          allowed_file_upload_methods:
+          - local_file
+          - remote_url
+          label: PDFファイル
+          max_length: 48
+          options: []
+          required: true
+          type: file
+          variable: file
+        - label: 生成する質問数
+          max_length: 48
+          options: []
+          required: true
+          type: number
+          variable: faq_count
+      height: 115
+      id: '1746516664325'
+      position:
+        x: 80
+        y: 282
+      positionAbsolute:
+        x: 80
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        desc: ''
+        is_array_file: false
+        selected: false
+        title: テキスト抽出ツール
+        type: document-extractor
+        variable_selector:
+        - '1746516664325'
+        - file
+      height: 91
+      id: '1746516745342'
+      position:
+        x: 384
+        y: 282
+      positionAbsolute:
+        x: 384
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: gpt-4o-2024-05-13
+          provider: langgenius/openai/openai
+        prompt_template:
+        - id: 09e976bd-bb11-4787-8c61-30e6b6b0144e
+          role: system
+          text: 'あなたは質問回答集を作成する専門家です。
+
+            以下のテキストを読んで、想定される質問と回答のペアを{{#1746516664325.faq_count#}}個生成してください。
+
+
+            ### 制約条件
+
+            - 質問は実際に読者から出そうな具体的な内容にすること
+
+            - 回答は簡潔で明確であること
+
+            - テキストに書かれている内容に基づいて回答すること
+
+            - 曖昧な表現は避けること
+
+            - 出力形式以外のものは生成しないこと
+
+
+            ### テキスト
+
+            {{#1746516745342.text#}}
+
+
+            ### 出力形式
+
+            Q1: [質問1]
+
+            A1: [回答1]
+
+
+            Q2: [質問2]
+
+            A2: [回答2]
+
+            ...'
+        selected: false
+        title: LLM
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 89
+      id: '1746516841899'
+      position:
+        x: 688
+        y: 282
+      positionAbsolute:
+        x: 688
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        desc: ''
+        outputs:
+        - value_selector:
+          - '1746517307602'
+          - output
+          variable: output
+        selected: false
+        title: 終了
+        type: end
+      height: 89
+      id: '1746516925013'
+      position:
+        x: 1341
+        y: 282
+      positionAbsolute:
+        x: 1341
+        y: 282
+      selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        desc: ''
+        selected: false
+        template: "{{llm_output}}\r\n\r\n---\r\n※この質問と回答はAIが自動生成したものです。"
+        title: テンプレート
+        type: template-transform
+        variables:
+        - value_selector:
+          - '1746516841899'
+          - text
+          variable: llm_output
+      height: 53
+      id: '1746517307602'
+      position:
+        x: 1012
+        y: 282
+      positionAbsolute:
+        x: 1012
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    viewport:
+      x: -1074.5
+      y: 142.5
+      zoom: 1
