@@ -1,0 +1,354 @@
+app:
+  description: 複数の文書を一括で要約できるアプリの作成方法を説明しています。Difyのワークフローツール機能を活用し、既存の文書要約アプリをツールとして組み込み、イテレーションノードで繰り返し処理を実現します。会議資料や提案書など、複数文書の一括要約を効率的に行うことができます。
+  icon: 🤖
+  icon_background: '#FFEAD5'
+  mode: workflow
+  name: 4-4_複数文書要約アプリ
+  use_icon_as_answer_icon: false
+dependencies: []
+kind: app
+version: 0.2.0
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload:
+      allowed_file_extensions:
+      - .JPG
+      - .JPEG
+      - .PNG
+      - .GIF
+      - .WEBP
+      - .SVG
+      allowed_file_types:
+      - image
+      allowed_file_upload_methods:
+      - local_file
+      - remote_url
+      enabled: false
+      fileUploadConfig:
+        audio_file_size_limit: 50
+        batch_count_limit: 5
+        file_size_limit: 15
+        image_file_size_limit: 10
+        video_file_size_limit: 100
+        workflow_file_upload_limit: 10
+      image:
+        enabled: false
+        number_limits: 3
+        transfer_methods:
+        - local_file
+        - remote_url
+      number_limits: 3
+    opening_statement: ''
+    retriever_resource:
+      enabled: true
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions: []
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: start
+        targetType: iteration
+      id: 1746520964676-source-1746521028846-target
+      source: '1746520964676'
+      sourceHandle: source
+      target: '1746521028846'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: true
+        isInLoop: false
+        iteration_id: '1746521028846'
+        sourceType: iteration-start
+        targetType: tool
+      id: 1746521028846start-source-1746521313940-target
+      source: 1746521028846start
+      sourceHandle: source
+      target: '1746521313940'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: iteration
+        targetType: code
+      id: 1746521028846-source-1746521815042-target
+      source: '1746521028846'
+      sourceHandle: source
+      target: '1746521815042'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: code
+        targetType: template-transform
+      id: 1746521815042-source-1746521945311-target
+      source: '1746521815042'
+      sourceHandle: source
+      target: '1746521945311'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: template-transform
+        targetType: end
+      id: 1746521945311-source-1746521457079-target
+      source: '1746521945311'
+      sourceHandle: source
+      target: '1746521457079'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    nodes:
+    - data:
+        desc: ''
+        selected: false
+        title: 開始
+        type: start
+        variables:
+        - allowed_file_extensions: []
+          allowed_file_types:
+          - document
+          allowed_file_upload_methods:
+          - local_file
+          - remote_url
+          label: PDF(複数対応)
+          max_length: 5
+          options: []
+          required: true
+          type: file-list
+          variable: files
+      height: 88
+      id: '1746520964676'
+      position:
+        x: 80
+        y: 282
+      positionAbsolute:
+        x: 80
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        desc: ''
+        error_handle_mode: terminated
+        is_parallel: false
+        iterator_selector:
+        - '1746520964676'
+        - files
+        output_selector:
+        - '1746521313940'
+        - text
+        output_type: array[string]
+        parallel_nums: 10
+        selected: false
+        start_node_id: 1746521028846start
+        title: イテレーション
+        type: iteration
+        width: 387
+      height: 146
+      id: '1746521028846'
+      position:
+        x: 383
+        y: 282
+      positionAbsolute:
+        x: 383
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 387
+      zIndex: 1
+    - data:
+        desc: ''
+        isInIteration: true
+        selected: false
+        title: ''
+        type: iteration-start
+      draggable: false
+      height: 48
+      id: 1746521028846start
+      parentId: '1746521028846'
+      position:
+        x: 24
+        y: 68
+      positionAbsolute:
+        x: 407
+        y: 350
+      selectable: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom-iteration-start
+      width: 44
+      zIndex: 1002
+    - data:
+        desc: ''
+        isInIteration: true
+        isInLoop: false
+        is_team_authorization: true
+        iteration_id: '1746521028846'
+        output_schema: null
+        paramSchemas:
+        - auto_generate: null
+          default: null
+          form: llm
+          human_description:
+            en_US: ''
+            ja_JP: ''
+            pt_BR: ''
+            zh_Hans: ''
+          label:
+            en_US: 要約ファイル
+            ja_JP: 要約ファイル
+            pt_BR: 要約ファイル
+            zh_Hans: 要約ファイル
+          llm_description: ''
+          max: null
+          min: null
+          name: file
+          options: []
+          placeholder:
+            en_US: ''
+            ja_JP: ''
+            pt_BR: ''
+            zh_Hans: ''
+          precision: null
+          required: true
+          scope: null
+          template: null
+          type: file
+        params:
+          file: ''
+        provider_id: 6145e242-98ad-4597-9b84-64cc95191212
+        provider_name: 文書要約アプリ
+        provider_type: workflow
+        selected: false
+        title: 文書要約アプリ
+        tool_configurations: {}
+        tool_description: このアプリは、PDFファイルの内容を自動的に要約してくれるツールです。一般的なQAアプリと異なり、ユーザーが質問を考える必要がありません。2段階の要約プロセスを採用しており、最初に全体の簡潔な要約を作成し、次に専門家と一般人の対話形式で詳しい解説を生成します。
+        tool_label: 文書要約アプリ
+        tool_name: DocumentSummarizer
+        tool_parameters:
+          file:
+            type: variable
+            value:
+            - '1746521028846'
+            - item
+        type: tool
+      height: 52
+      id: '1746521313940'
+      parentId: '1746521028846'
+      position:
+        x: 128
+        y: 68
+      positionAbsolute:
+        x: 511
+        y: 350
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+      zIndex: 1002
+    - data:
+        desc: ''
+        outputs:
+        - value_selector:
+          - '1746521945311'
+          - output
+          variable: output
+        selected: false
+        title: 終了
+        type: end
+      height: 88
+      id: '1746521457079'
+      position:
+        x: 1421.6209471073234
+        y: 282
+      positionAbsolute:
+        x: 1421.6209471073234
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        code: "import json\n\ndef main(arg1: list[str]) -> dict:\n    return {\"summaries\"\
+          : [json.loads(i) for i in arg1]}\n"
+        code_language: python3
+        desc: ''
+        outputs:
+          summaries:
+            children: null
+            type: array[object]
+        selected: false
+        title: コード実行
+        type: code
+        variables:
+        - value_selector:
+          - '1746521028846'
+          - output
+          variable: arg1
+      height: 52
+      id: '1746521815042'
+      position:
+        x: 835.9149459614312
+        y: 282
+      positionAbsolute:
+        x: 835.9149459614312
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        desc: ''
+        selected: true
+        template: "{% for summary in summaries %}\r\n{{ summary.output }}\r\n{% endfor\
+          \ %}"
+        title: テンプレート
+        type: template-transform
+        variables:
+        - value_selector:
+          - '1746521815042'
+          - summaries
+          variable: summaries
+      height: 52
+      id: '1746521945311'
+      position:
+        x: 1128.7679465343772
+        y: 282
+      positionAbsolute:
+        x: 1128.7679465343772
+        y: 282
+      selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    viewport:
+      x: -856.240414197135
+      y: 102.18470244521731
+      zoom: 0.8844027532355296
