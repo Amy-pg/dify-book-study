@@ -1,0 +1,231 @@
+app:
+  description: このアプリは、PDFファイルをナレッジとして登録し、RAG技術を用いて文書内の関連情報を検索・参照しながら質問応答を行うシステムです。DifyのチャットフローとLLMを組み合わせ、登録した文書の内容に基づいて正確な回答を生成します。
+  icon: 🤖
+  icon_background: '#FFEAD5'
+  mode: advanced-chat
+  name: 5-2_健康ガイドAI
+  use_icon_as_answer_icon: false
+dependencies:
+- current_identifier: null
+  type: marketplace
+  value:
+    marketplace_plugin_unique_identifier: langgenius/cohere:0.0.3@ba2b83043640727790f851f3b7d5f13019834a302c953ea7db625fba0f6cff16
+- current_identifier: null
+  type: marketplace
+  value:
+    marketplace_plugin_unique_identifier: langgenius/openai:0.0.7@11ec0b1909200f62b6ebf2cec1da981a9071d11c1ee0e2ef332ce89bcffa2544
+kind: app
+version: 0.2.0
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload:
+      allowed_file_extensions:
+      - .JPG
+      - .JPEG
+      - .PNG
+      - .GIF
+      - .WEBP
+      - .SVG
+      allowed_file_types:
+      - image
+      allowed_file_upload_methods:
+      - local_file
+      - remote_url
+      enabled: false
+      fileUploadConfig:
+        audio_file_size_limit: 50
+        batch_count_limit: 5
+        file_size_limit: 15
+        image_file_size_limit: 10
+        video_file_size_limit: 100
+        workflow_file_upload_limit: 10
+      image:
+        enabled: false
+        number_limits: 3
+        transfer_methods:
+        - local_file
+        - remote_url
+      number_limits: 3
+    opening_statement: ''
+    retriever_resource:
+      enabled: true
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions: []
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: start
+        targetType: knowledge-retrieval
+      id: 1746535588848-source-1746535679309-target
+      source: '1746535588848'
+      sourceHandle: source
+      target: '1746535679309'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: knowledge-retrieval
+        targetType: llm
+      id: 1746535679309-source-1746535764398-target
+      source: '1746535679309'
+      sourceHandle: source
+      target: '1746535764398'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: llm
+        targetType: answer
+      id: 1746535764398-source-1746535821250-target
+      source: '1746535764398'
+      sourceHandle: source
+      target: '1746535821250'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    nodes:
+    - data:
+        desc: ''
+        selected: false
+        title: 開始
+        type: start
+        variables: []
+      height: 52
+      id: '1746535588848'
+      position:
+        x: 80
+        y: 282
+      positionAbsolute:
+        x: 80
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        dataset_ids:
+        - OSeLwDoOUAjS33N0gCiba/8xJYFJiWs/aUw1aM3/7Fapba4LMDFX71DpAHgd4pRy
+        desc: ''
+        multiple_retrieval_config:
+          reranking_enable: false
+          reranking_mode: reranking_model
+          reranking_model:
+            model: rerank-english-v2.0
+            provider: langgenius/cohere/cohere
+          top_k: 4
+        query_variable_selector:
+        - '1746535588848'
+        - sys.query
+        retrieval_mode: multiple
+        selected: false
+        title: 知識取得
+        type: knowledge-retrieval
+      height: 90
+      id: '1746535679309'
+      position:
+        x: 383
+        y: 282
+      positionAbsolute:
+        x: 383
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        context:
+          enabled: true
+          variable_selector:
+          - '1746535679309'
+          - result
+        desc: ''
+        model:
+          completion_params: {}
+          mode: chat
+          name: gpt-3.5-turbo
+          provider: langgenius/openai/openai
+        prompt_template:
+        - id: 7da28021-69bb-4dc2-924b-23f77b10c43e
+          role: system
+          text: 'あなたは親切で正確なアシスタントです。
+
+            与えられた文脈に基づいて質問に回答してください。
+
+
+            ### 制約条件
+
+            - 必ず文脈の情報のみを使用して回答すること
+
+            - 文脈に含まれない情報については「文脈に情報がありません」と伝えること
+
+            - 推測や一般的な知識での補完は行わないこと
+
+
+            ### 文脈
+
+            {{#context#}}'
+        - id: 13e356e4-8378-4174-80d5-b20d386a295a
+          role: user
+          text: '{{#sys.query#}}'
+        selected: true
+        title: LLM
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 88
+      id: '1746535764398'
+      position:
+        x: 686
+        y: 282
+      positionAbsolute:
+        x: 686
+        y: 282
+      selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        answer: '{{#1746535764398.text#}}'
+        desc: ''
+        selected: false
+        title: 回答
+        type: answer
+        variables: []
+      height: 103
+      id: '1746535821250'
+      position:
+        x: 989
+        y: 282
+      positionAbsolute:
+        x: 989
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    viewport:
+      x: -557.5
+      y: 193.55555948014148
+      zoom: 1
