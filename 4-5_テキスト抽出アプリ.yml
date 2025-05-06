@@ -1,0 +1,458 @@
+app:
+  description: 画像から文字を抽出するアプリの作成方法を解説しています。大規模マルチモーダルモデル(LMM)を使用して、手書きメモや印刷文書の写真をテキストデータに変換できます。Difyのワークフローで簡単に構築でき、高精度な文字認識が可能です。
+  icon: 🤖
+  icon_background: '#FFEAD5'
+  mode: workflow
+  name: 4-5_テキスト抽出アプリ
+  use_icon_as_answer_icon: false
+dependencies:
+- current_identifier: null
+  type: marketplace
+  value:
+    marketplace_plugin_unique_identifier: langgenius/openai:0.0.7@11ec0b1909200f62b6ebf2cec1da981a9071d11c1ee0e2ef332ce89bcffa2544
+kind: app
+version: 0.2.0
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload:
+      allowed_file_extensions:
+      - .JPG
+      - .JPEG
+      - .PNG
+      - .GIF
+      - .WEBP
+      - .SVG
+      allowed_file_types:
+      - image
+      allowed_file_upload_methods:
+      - local_file
+      - remote_url
+      enabled: false
+      fileUploadConfig:
+        audio_file_size_limit: 50
+        batch_count_limit: 5
+        file_size_limit: 15
+        image_file_size_limit: 10
+        video_file_size_limit: 100
+        workflow_file_upload_limit: 10
+      image:
+        enabled: false
+        number_limits: 3
+        transfer_methods:
+        - local_file
+        - remote_url
+      number_limits: 3
+    opening_statement: ''
+    retriever_resource:
+      enabled: true
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions: []
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: start
+        targetType: llm
+      id: 1746522544744-source-1746527295168-target
+      source: '1746522544744'
+      sourceHandle: source
+      target: '1746527295168'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: llm
+        targetType: tool
+      id: 1746527295168-source-1746527799477-target
+      source: '1746527295168'
+      sourceHandle: source
+      target: '1746527799477'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: tool
+        targetType: template-transform
+      id: 1746527799477-source-1746527809651-target
+      source: '1746527799477'
+      sourceHandle: source
+      target: '1746527809651'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: template-transform
+        targetType: end
+      id: 1746527809651-source-1746527328181-target
+      source: '1746527809651'
+      sourceHandle: source
+      target: '1746527328181'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    nodes:
+    - data:
+        desc: ''
+        selected: false
+        title: 開始
+        type: start
+        variables:
+        - allowed_file_extensions: []
+          allowed_file_types:
+          - image
+          allowed_file_upload_methods:
+          - local_file
+          - remote_url
+          label: 書き起こしする画像
+          max_length: 48
+          options: []
+          required: true
+          type: file
+          variable: image
+      height: 88
+      id: '1746522544744'
+      position:
+        x: 80
+        y: 282
+      positionAbsolute:
+        x: 80
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: gpt-4o-2024-05-13
+          provider: langgenius/openai/openai
+        prompt_template:
+        - id: 84383aff-5a72-4b05-b24b-cc448d2a22f3
+          role: system
+          text: '与えられた画像は請求書です。以下の情報のみを抽出してJSON形式で出力してください。それ以外の出力は不要です。
+
+
+            ### 事前情報
+
+            私は株式会社AIキャットの社員です。取引先名を抽出する際はそれを踏まえてください。
+
+
+            ### 必要な情報
+
+            - 請求番号
+
+            - 取引先名
+
+            - 請求金額（税込）
+
+            - 支払期限
+
+
+            ### 出力フォーマット
+
+            不明な場合は適当な値を出力せず不明と出力してください。
+
+            {
+
+              "請求番号": "",
+
+              "取引先名": "",
+
+              "請求金額": "",
+
+              "支払期限": ""
+
+            }'
+        - id: 6b06633e-095b-4e2b-92c7-2f9fc98ffe99
+          role: user
+          text: '### 画像
+
+            {{#1746522544744.image#}}'
+        selected: false
+        title: LLM
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 88
+      id: '1746527295168'
+      position:
+        x: 383
+        y: 282
+      positionAbsolute:
+        x: 383
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        desc: ''
+        outputs:
+        - value_selector:
+          - '1746527809651'
+          - output
+          variable: output
+        selected: false
+        title: 終了
+        type: end
+      height: 88
+      id: '1746527328181'
+      position:
+        x: 1324.0913915913761
+        y: 390.4872018610566
+      positionAbsolute:
+        x: 1324.0913915913761
+        y: 390.4872018610566
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        desc: ''
+        is_team_authorization: true
+        output_schema: null
+        paramSchemas:
+        - auto_generate: null
+          default: '%Y-%m-%d %H:%M:%S'
+          form: form
+          human_description:
+            en_US: Time format in strftime standard.
+            ja_JP: Time format in strftime standard.
+            pt_BR: Time format in strftime standard.
+            zh_Hans: strftime 标准的时间格式。
+          label:
+            en_US: Format
+            ja_JP: Format
+            pt_BR: Format
+            zh_Hans: 格式
+          llm_description: null
+          max: null
+          min: null
+          name: format
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: string
+        - auto_generate: null
+          default: UTC
+          form: form
+          human_description:
+            en_US: Timezone
+            ja_JP: Timezone
+            pt_BR: Timezone
+            zh_Hans: 时区
+          label:
+            en_US: Timezone
+            ja_JP: Timezone
+            pt_BR: Timezone
+            zh_Hans: 时区
+          llm_description: null
+          max: null
+          min: null
+          name: timezone
+          options:
+          - label:
+              en_US: UTC
+              ja_JP: UTC
+              pt_BR: UTC
+              zh_Hans: UTC
+            value: UTC
+          - label:
+              en_US: America/New_York
+              ja_JP: America/New_York
+              pt_BR: America/New_York
+              zh_Hans: 美洲/纽约
+            value: America/New_York
+          - label:
+              en_US: America/Los_Angeles
+              ja_JP: America/Los_Angeles
+              pt_BR: America/Los_Angeles
+              zh_Hans: 美洲/洛杉矶
+            value: America/Los_Angeles
+          - label:
+              en_US: America/Chicago
+              ja_JP: America/Chicago
+              pt_BR: America/Chicago
+              zh_Hans: 美洲/芝加哥
+            value: America/Chicago
+          - label:
+              en_US: America/Sao_Paulo
+              ja_JP: America/Sao_Paulo
+              pt_BR: América/São Paulo
+              zh_Hans: 美洲/圣保罗
+            value: America/Sao_Paulo
+          - label:
+              en_US: Asia/Shanghai
+              ja_JP: Asia/Shanghai
+              pt_BR: Asia/Shanghai
+              zh_Hans: 亚洲/上海
+            value: Asia/Shanghai
+          - label:
+              en_US: Asia/Ho_Chi_Minh
+              ja_JP: Asia/Ho_Chi_Minh
+              pt_BR: Ásia/Ho Chi Minh
+              zh_Hans: 亚洲/胡志明市
+            value: Asia/Ho_Chi_Minh
+          - label:
+              en_US: Asia/Tokyo
+              ja_JP: Asia/Tokyo
+              pt_BR: Asia/Tokyo
+              zh_Hans: 亚洲/东京
+            value: Asia/Tokyo
+          - label:
+              en_US: Asia/Dubai
+              ja_JP: Asia/Dubai
+              pt_BR: Asia/Dubai
+              zh_Hans: 亚洲/迪拜
+            value: Asia/Dubai
+          - label:
+              en_US: Asia/Kolkata
+              ja_JP: Asia/Kolkata
+              pt_BR: Asia/Kolkata
+              zh_Hans: 亚洲/加尔各答
+            value: Asia/Kolkata
+          - label:
+              en_US: Asia/Seoul
+              ja_JP: Asia/Seoul
+              pt_BR: Asia/Seoul
+              zh_Hans: 亚洲/首尔
+            value: Asia/Seoul
+          - label:
+              en_US: Asia/Singapore
+              ja_JP: Asia/Singapore
+              pt_BR: Asia/Singapore
+              zh_Hans: 亚洲/新加坡
+            value: Asia/Singapore
+          - label:
+              en_US: Europe/London
+              ja_JP: Europe/London
+              pt_BR: Europe/London
+              zh_Hans: 欧洲/伦敦
+            value: Europe/London
+          - label:
+              en_US: Europe/Berlin
+              ja_JP: Europe/Berlin
+              pt_BR: Europe/Berlin
+              zh_Hans: 欧洲/柏林
+            value: Europe/Berlin
+          - label:
+              en_US: Europe/Moscow
+              ja_JP: Europe/Moscow
+              pt_BR: Europe/Moscow
+              zh_Hans: 欧洲/莫斯科
+            value: Europe/Moscow
+          - label:
+              en_US: Australia/Sydney
+              ja_JP: Australia/Sydney
+              pt_BR: Australia/Sydney
+              zh_Hans: 澳大利亚/悉尼
+            value: Australia/Sydney
+          - label:
+              en_US: Pacific/Auckland
+              ja_JP: Pacific/Auckland
+              pt_BR: Pacific/Auckland
+              zh_Hans: 太平洋/奥克兰
+            value: Pacific/Auckland
+          - label:
+              en_US: Africa/Cairo
+              ja_JP: Africa/Cairo
+              pt_BR: Africa/Cairo
+              zh_Hans: 非洲/开罗
+            value: Africa/Cairo
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: select
+        params:
+          format: ''
+          timezone: ''
+        provider_id: time
+        provider_name: time
+        provider_type: builtin
+        selected: false
+        title: Current Time
+        tool_configurations:
+          format: '%Y-%m-%d %H:%M:%S'
+          timezone: Asia/Tokyo
+        tool_description: A tool for getting the current time.
+        tool_label: Current Time
+        tool_name: current_time
+        tool_parameters: {}
+        type: tool
+      height: 114
+      id: '1746527799477'
+      position:
+        x: 686
+        y: 409
+      positionAbsolute:
+        x: 686
+        y: 409
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        desc: ''
+        selected: false
+        template: "### 文書情報\r\n書き起こし日時：{{current_time}}\r\n\r\n---\r\n\r\n{{text}}"
+        title: テンプレート
+        type: template-transform
+        variables:
+        - value_selector:
+          - '1746527799477'
+          - text
+          variable: current_time
+        - value_selector:
+          - '1746527295168'
+          - text
+          variable: text
+      height: 52
+      id: '1746527809651'
+      position:
+        x: 989
+        y: 409
+      positionAbsolute:
+        x: 989
+        y: 409
+      selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    viewport:
+      x: -492.72450862157984
+      y: -55.96153536920747
+      zoom: 0.8572439735251759
