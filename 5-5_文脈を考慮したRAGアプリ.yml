@@ -1,0 +1,505 @@
+app:
+  description: このアプリは、ユーザーの曖昧な質問を適切なクエリに変換してRAG検索を行うシステムです。入力を「AIキャットの商品に関する質問」と「その他」に分類し、商品関連の質問には文脈を考慮したRAG検索を実行。それ以外の質問には一般的な応答を返す仕組みになっています。文脈を理解することで、「これは何？」といった省略された質問にも適切に対応できます。
+  icon: 🤖
+  icon_background: '#FFEAD5'
+  mode: advanced-chat
+  name: 文脈を考慮したRAGアプリ
+  use_icon_as_answer_icon: false
+dependencies:
+- current_identifier: null
+  type: marketplace
+  value:
+    marketplace_plugin_unique_identifier: langgenius/cohere:0.0.3@ba2b83043640727790f851f3b7d5f13019834a302c953ea7db625fba0f6cff16
+- current_identifier: null
+  type: marketplace
+  value:
+    marketplace_plugin_unique_identifier: langgenius/openai:0.0.7@11ec0b1909200f62b6ebf2cec1da981a9071d11c1ee0e2ef332ce89bcffa2544
+kind: app
+version: 0.2.0
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload:
+      allowed_file_extensions:
+      - .JPG
+      - .JPEG
+      - .PNG
+      - .GIF
+      - .WEBP
+      - .SVG
+      allowed_file_types:
+      - image
+      allowed_file_upload_methods:
+      - local_file
+      - remote_url
+      enabled: false
+      fileUploadConfig:
+        audio_file_size_limit: 50
+        batch_count_limit: 5
+        file_size_limit: 15
+        image_file_size_limit: 10
+        video_file_size_limit: 100
+        workflow_file_upload_limit: 10
+      image:
+        enabled: false
+        number_limits: 3
+        transfer_methods:
+        - local_file
+        - remote_url
+      number_limits: 3
+    opening_statement: ''
+    retriever_resource:
+      enabled: true
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions: []
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: start
+        targetType: question-classifier
+      id: 1746615919070-source-1746615928008-target
+      source: '1746615919070'
+      sourceHandle: source
+      target: '1746615928008'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: question-classifier
+        targetType: llm
+      id: 1746615928008-1-1746615947957-target
+      source: '1746615928008'
+      sourceHandle: '1'
+      target: '1746615947957'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: question-classifier
+        targetType: llm
+      id: 1746615928008-2-1746615955261-target
+      source: '1746615928008'
+      sourceHandle: '2'
+      target: '1746615955261'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: llm
+        targetType: knowledge-retrieval
+      id: 1746615947957-source-1746615966241-target
+      source: '1746615947957'
+      sourceHandle: source
+      target: '1746615966241'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: llm
+        targetType: answer
+      id: 1746615955261-source-1746615976412-target
+      source: '1746615955261'
+      sourceHandle: source
+      target: '1746615976412'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: knowledge-retrieval
+        targetType: llm
+      id: 1746615966241-source-1746616021307-target
+      source: '1746615966241'
+      sourceHandle: source
+      target: '1746616021307'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: llm
+        targetType: answer
+      id: 1746616021307-source-1746616039167-target
+      source: '1746616021307'
+      sourceHandle: source
+      target: '1746616039167'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    nodes:
+    - data:
+        desc: ''
+        selected: false
+        title: 開始
+        type: start
+        variables: []
+      height: 52
+      id: '1746615919070'
+      position:
+        x: 80
+        y: 282
+      positionAbsolute:
+        x: 80
+        y: 282
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        classes:
+        - id: '1'
+          name: AIキャットの商品に関する質問
+        - id: '2'
+          name: その他
+        desc: ''
+        instructions: ''
+        memory:
+          query_prompt_template: '{{#sys.query#}}'
+          window:
+            enabled: false
+            size: 50
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: gpt-4o-mini
+          provider: langgenius/openai/openai
+        query_variable_selector:
+        - '1746615919070'
+        - sys.query
+        selected: false
+        title: 質問分類器
+        topics: []
+        type: question-classifier
+        vision:
+          enabled: false
+      height: 170
+      id: '1746615928008'
+      position:
+        x: 383
+        y: 282
+      positionAbsolute:
+        x: 383
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        memory:
+          query_prompt_template: '{{#sys.query#}}'
+          role_prefix:
+            assistant: ''
+            user: ''
+          window:
+            enabled: true
+            size: 3
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: gpt-4o-2024-05-13
+          provider: langgenius/openai/openai
+        prompt_template:
+        - id: e1e6bc5a-f942-45e5-a6ac-0de6a1d4d604
+          role: system
+          text: 'あなたはAIキャット社のカスタマーサポートアシスタントです。ユーザーの質問をより適切な検索クエリに変換してください。
+
+
+            ### 検索クエリ生成の際の注意点
+
+            1. 会話の文脈を考慮し、これまでの質問や回答も踏まえる
+
+            2. 具体的な商品名やキーワードは保持する
+
+            3. 質問の本質的な意図を反映させる
+
+            4. 一般的な挨拶や不要な表現は除去する
+
+            5. できるだけ自然な質問文として表現する
+
+
+            ### クエリ生成のルール
+
+            - 商品名は正確に記載する（例：PetAI Guardian）
+
+            - 同義語や関連する用語は含める
+
+            - 文脈から推測される重要な情報は補完する
+
+            - 検索の意図が明確になる表現を使用する
+
+
+            クエリのみを出力し、理由や説明は付けないでください。'
+        - id: 490a2e6c-43f8-4df5-8f6c-a9ea7f38579a
+          role: user
+          text: '{{#sys.query#}}'
+        selected: true
+        title: LLM(クエリ変換)
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 88
+      id: '1746615947957'
+      position:
+        x: 686
+        y: 282
+      positionAbsolute:
+        x: 686
+        y: 282
+      selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: gpt-4o-2024-05-13
+          provider: langgenius/openai/openai
+        prompt_template:
+        - id: 01c30a35-3bc8-4cc4-af55-699112757fe2
+          role: system
+          text: 'あなたはAIキャット社のAIアシスタントです。
+
+            ユーザーの入力がAIキャット社に関連するかどうかを判断し、適切に対応してください。
+
+
+            ### 応答方針
+
+            1. AIキャット社に関係のない質問や要求：
+
+            - 丁寧に回答を控える旨を説明
+
+            - AIキャット社の製品やサービスについての質問を促す
+
+
+            2. AIキャット社に関連する質問：
+
+            - 以下の連絡先を案内する
+
+            【お問い合わせ】
+
+            株式会社AIキャット カスタマーサポートセンター
+
+            TEL：0120-XXX-XXX
+
+            受付時間：9:00-18:00（年中無休）
+
+            メール：support-example@ai.cat
+
+
+            ### 制約条件
+
+            - AIキャット社の具体的な商品情報には言及しないこと
+
+            - 違法行為や不適切な要求は毅然とした態度で断ること'
+        - id: 530b2402-8e98-47c2-b715-ff8041574b89
+          role: user
+          text: '{{#sys.query#}}'
+        selected: false
+        title: LLM(一般的な回答)
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 88
+      id: '1746615955261'
+      position:
+        x: 686
+        y: 409
+      positionAbsolute:
+        x: 686
+        y: 409
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        dataset_ids:
+        - sqKPIY9IwoXt+jQfg4/MQG7mNtUbpzWNBYs+q+oEOKrpr667uIsq7hZyCnlfVBeo
+        - kWkTlH8+5A9Yka020cUajm3YKEChGQ4cD1RLqa56Q0605S7hAprHceTBGKn41kRO
+        desc: ''
+        multiple_retrieval_config:
+          reranking_enable: false
+          reranking_mode: reranking_model
+          reranking_model:
+            model: rerank-english-v2.0
+            provider: langgenius/cohere/cohere
+          score_threshold: null
+          top_k: 4
+          weights:
+            keyword_setting:
+              keyword_weight: 0.3
+            vector_setting:
+              embedding_model_name: text-embedding-ada-002
+              embedding_provider_name: langgenius/openai/openai
+              vector_weight: 0.7
+        query_variable_selector:
+        - '1746615919070'
+        - sys.query
+        retrieval_mode: multiple
+        selected: false
+        title: 知識取得
+        type: knowledge-retrieval
+      height: 118
+      id: '1746615966241'
+      position:
+        x: 989
+        y: 282
+      positionAbsolute:
+        x: 989
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        answer: '{{#1746615955261.text#}}'
+        desc: ''
+        selected: false
+        title: 回答 2
+        type: answer
+        variables: []
+      height: 103
+      id: '1746615976412'
+      position:
+        x: 989
+        y: 409
+      positionAbsolute:
+        x: 989
+        y: 409
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        context:
+          enabled: true
+          variable_selector:
+          - '1746615966241'
+          - result
+        desc: ''
+        memory:
+          query_prompt_template: '{{#sys.query#}}'
+          role_prefix:
+            assistant: ''
+            user: ''
+          window:
+            enabled: false
+            size: 50
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: gpt-4o-2024-05-13
+          provider: langgenius/openai/openai
+        prompt_template:
+        - id: 1fa5455b-d48a-4ae0-91e1-776e4e8acc88
+          role: system
+          text: 'あなたはAIキャット社のカスタマーサポート担当者です。
+
+            商品パンフレットとよくある質問集を参照して、丁寧に回答してください。
+
+
+            ### 制約条件
+
+            - 参照情報に記載がある内容のみ回答すること
+
+            - 参照情報に無い内容は「申し訳ございませんが、その点については確認が必要です」と回答すること
+
+            - 商品の機能や仕様は、パンフレットの内容を正確に伝えること
+
+            - よくある質問集に記載がある場合は、その回答内容を基本とすること
+
+            - 専門用語は分かりやすく説明を加えること
+
+            - 価格に関する情報は必ず最新かどうか確認するよう促すこと
+
+
+            ### 参照情報
+
+            {{#context#}}'
+        - id: c5c1ba61-a0d5-4838-91ba-338edd750320
+          role: user
+          text: '{{#sys.query#}}'
+        selected: false
+        title: LLM(RAGで回答)
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 88
+      id: '1746616021307'
+      position:
+        x: 1292
+        y: 282
+      positionAbsolute:
+        x: 1292
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        answer: '{{#1746616021307.text#}}'
+        desc: ''
+        selected: false
+        title: 回答
+        type: answer
+        variables: []
+      height: 103
+      id: '1746616039167'
+      position:
+        x: 1595
+        y: 282
+      positionAbsolute:
+        x: 1595
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    viewport:
+      x: -603
+      y: 230.5
+      zoom: 1
