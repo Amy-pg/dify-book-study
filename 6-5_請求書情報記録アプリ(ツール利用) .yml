@@ -1,0 +1,745 @@
+app:
+  description: Googleスプレッドシートとの連携処理をカスタムツール化するアプリです。HTTPリクエストの技術的な設定を隠蔽し、シンプルなインターフェースで請求書データの登録が可能になります。再利用性が高く、チーム開発にも適しています。
+  icon: 🤖
+  icon_background: '#FFEAD5'
+  mode: workflow
+  name: 6-5_請求書情報記録アプリ(ツール利用)
+  use_icon_as_answer_icon: false
+dependencies:
+- current_identifier: null
+  type: marketplace
+  value:
+    marketplace_plugin_unique_identifier: langgenius/json_process:0.0.1@0c77a81ebc6e3ad0da30d9479c51a9147c88fa00bf6822fc1bb9c72141f7a89a
+- current_identifier: null
+  type: marketplace
+  value:
+    marketplace_plugin_unique_identifier: langgenius/openai:0.0.7@11ec0b1909200f62b6ebf2cec1da981a9071d11c1ee0e2ef332ce89bcffa2544
+kind: app
+version: 0.2.0
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload:
+      allowed_file_extensions:
+      - .JPG
+      - .JPEG
+      - .PNG
+      - .GIF
+      - .WEBP
+      - .SVG
+      allowed_file_types:
+      - image
+      allowed_file_upload_methods:
+      - local_file
+      - remote_url
+      enabled: false
+      fileUploadConfig:
+        audio_file_size_limit: 50
+        batch_count_limit: 5
+        file_size_limit: 15
+        image_file_size_limit: 10
+        video_file_size_limit: 100
+        workflow_file_upload_limit: 10
+      image:
+        enabled: false
+        number_limits: 3
+        transfer_methods:
+        - local_file
+        - remote_url
+      number_limits: 3
+    opening_statement: ''
+    retriever_resource:
+      enabled: true
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions: []
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: start
+        targetType: llm
+      id: 1746865388211-source-1746865396067-target
+      source: '1746865388211'
+      sourceHandle: source
+      target: '1746865396067'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: llm
+        targetType: code
+      id: 1746865396067-source-1746865431460-target
+      source: '1746865396067'
+      sourceHandle: source
+      target: '1746865431460'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: code
+        targetType: tool
+      id: 1746865431460-source-1746865820527-target
+      source: '1746865431460'
+      sourceHandle: source
+      target: '1746865820527'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: tool
+        targetType: tool
+      id: 1746865820527-source-1746865864176-target
+      source: '1746865820527'
+      sourceHandle: source
+      target: '1746865864176'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: tool
+        targetType: tool
+      id: 1746865820527-source-1746865884276-target
+      source: '1746865820527'
+      sourceHandle: source
+      target: '1746865884276'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: tool
+        targetType: template-transform
+      id: 1746865864176-source-1746865907715-target
+      source: '1746865864176'
+      sourceHandle: source
+      target: '1746865907715'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: tool
+        targetType: template-transform
+      id: 1746865884276-source-1746865907715-target
+      source: '1746865884276'
+      sourceHandle: source
+      target: '1746865907715'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: template-transform
+        targetType: end
+      id: 1746865907715-source-1746865455955-target
+      source: '1746865907715'
+      sourceHandle: source
+      target: '1746865455955'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    nodes:
+    - data:
+        desc: ''
+        selected: false
+        title: 開始
+        type: start
+        variables:
+        - allowed_file_extensions: []
+          allowed_file_types:
+          - image
+          allowed_file_upload_methods:
+          - local_file
+          - remote_url
+          label: image
+          max_length: 48
+          options: []
+          required: true
+          type: file
+          variable: image
+      height: 89
+      id: '1746865388211'
+      position:
+        x: 80
+        y: 282
+      positionAbsolute:
+        x: 80
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        model:
+          completion_params:
+            response_format: json_object
+          mode: chat
+          name: gpt-4-turbo
+          provider: langgenius/openai/openai
+        prompt_template:
+        - id: f8e9baa3-078e-453d-b555-7c5d4a699c1c
+          role: system
+          text: '与えられた画像は請求書です。以下の情報のみを抽出してJSON形式で出力してください。それ以外の出力は不要です。
+
+
+            ### 事前情報
+
+            私は株式会社AIキャットの社員です。取引先名を抽出する際はそれを踏まえてください。
+
+
+            ### 必要な情報
+
+            - 請求番号
+
+            - 取引先名
+
+            - 請求金額（税込）
+
+            - 支払期限
+
+
+            ### 出力フォーマット
+
+            不明な場合は適当な値を出力せず不明と出力してください。
+
+            {
+
+              "請求番号": "",
+
+              "取引先名": "",
+
+              "請求金額": "",
+
+              "支払期限": ""
+
+            }'
+        - id: be521edb-edf8-4a6e-b584-08d193fdcb1e
+          role: user
+          text: '{{#1746865388211.image#}}'
+        selected: false
+        title: LLM
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 89
+      id: '1746865396067'
+      position:
+        x: 384
+        y: 282
+      positionAbsolute:
+        x: 384
+        y: 282
+      selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "import json\n\ndef main(llm_output: str) -> dict:\n    parsed_json\
+          \ = json.loads(llm_output)\n    return {\n        \"invoice_number\": parsed_json[\"\
+          請求番号\"],\n        \"company_name\": parsed_json[\"取引先名\"],\n        \"amount\"\
+          : parsed_json[\"請求金額\"],\n        \"due_date\": parsed_json[\"支払期限\"],\n\
+          \    }\n"
+        code_language: python3
+        desc: ''
+        outputs:
+          amount:
+            children: null
+            type: string
+          company_name:
+            children: null
+            type: string
+          due_date:
+            children: null
+            type: string
+          invoice_number:
+            children: null
+            type: string
+        selected: false
+        title: コード実行
+        type: code
+        variables:
+        - value_selector:
+          - '1746865396067'
+          - text
+          variable: llm_output
+      height: 53
+      id: '1746865431460'
+      position:
+        x: 671
+        y: 282
+      positionAbsolute:
+        x: 671
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        desc: ''
+        outputs:
+        - value_selector:
+          - '1746865907715'
+          - output
+          variable: output
+        selected: false
+        title: 終了
+        type: end
+      height: 89
+      id: '1746865455955'
+      position:
+        x: 1929
+        y: 282
+      positionAbsolute:
+        x: 1929
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        desc: ''
+        is_team_authorization: true
+        output_schema: null
+        paramSchemas:
+        - auto_generate: null
+          default: null
+          form: llm
+          human_description:
+            en_US: ''
+            ja_JP: ''
+            pt_BR: ''
+            zh_Hans: ''
+          label:
+            en_US: 請求番号
+            ja_JP: 請求番号
+            pt_BR: 請求番号
+            zh_Hans: 請求番号
+          llm_description: ''
+          max: null
+          min: null
+          name: 請求番号
+          options: []
+          placeholder:
+            en_US: ''
+            ja_JP: ''
+            pt_BR: ''
+            zh_Hans: ''
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: string
+        - auto_generate: null
+          default: null
+          form: llm
+          human_description:
+            en_US: ''
+            ja_JP: ''
+            pt_BR: ''
+            zh_Hans: ''
+          label:
+            en_US: 取引先名
+            ja_JP: 取引先名
+            pt_BR: 取引先名
+            zh_Hans: 取引先名
+          llm_description: ''
+          max: null
+          min: null
+          name: 取引先名
+          options: []
+          placeholder:
+            en_US: ''
+            ja_JP: ''
+            pt_BR: ''
+            zh_Hans: ''
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: string
+        - auto_generate: null
+          default: null
+          form: llm
+          human_description:
+            en_US: ''
+            ja_JP: ''
+            pt_BR: ''
+            zh_Hans: ''
+          label:
+            en_US: 請求金額
+            ja_JP: 請求金額
+            pt_BR: 請求金額
+            zh_Hans: 請求金額
+          llm_description: ''
+          max: null
+          min: null
+          name: 請求金額
+          options: []
+          placeholder:
+            en_US: ''
+            ja_JP: ''
+            pt_BR: ''
+            zh_Hans: ''
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: string
+        - auto_generate: null
+          default: null
+          form: llm
+          human_description:
+            en_US: ''
+            ja_JP: ''
+            pt_BR: ''
+            zh_Hans: ''
+          label:
+            en_US: 支払期限
+            ja_JP: 支払期限
+            pt_BR: 支払期限
+            zh_Hans: 支払期限
+          llm_description: ''
+          max: null
+          min: null
+          name: 支払期限
+          options: []
+          placeholder:
+            en_US: ''
+            ja_JP: ''
+            pt_BR: ''
+            zh_Hans: ''
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: string
+        params:
+          取引先名: ''
+          支払期限: ''
+          請求番号: ''
+          請求金額: ''
+        provider_id: e2674f65-34bb-4022-8aaf-15d51d18a2d2
+        provider_name: 請求書データ登録 API
+        provider_type: api
+        selected: false
+        title: registerInvoice
+        tool_configurations: {}
+        tool_description: 請求書データをスプレッドシートに登録します
+        tool_label: registerInvoice
+        tool_name: registerInvoice
+        tool_parameters:
+          取引先名:
+            type: mixed
+            value: '{{#1746865431460.company_name#}}'
+          支払期限:
+            type: mixed
+            value: '{{#1746865431460.due_date#}}'
+          請求番号:
+            type: mixed
+            value: '{{#1746865431460.invoice_number#}}'
+          請求金額:
+            type: mixed
+            value: '{{#1746865431460.amount#}}'
+        type: tool
+      height: 53
+      id: '1746865820527'
+      position:
+        x: 976
+        y: 282
+      positionAbsolute:
+        x: 976
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        desc: ''
+        is_team_authorization: true
+        output_schema: null
+        paramSchemas:
+        - auto_generate: null
+          default: null
+          form: llm
+          human_description:
+            en_US: JSON data
+            ja_JP: JSON data
+            pt_BR: JSON数据
+            zh_Hans: JSON数据
+          label:
+            en_US: JSON data
+            ja_JP: JSON data
+            pt_BR: JSON data
+            zh_Hans: JSON数据
+          llm_description: JSON data to be processed
+          max: null
+          min: null
+          name: content
+          options: []
+          placeholder: null
+          precision: null
+          required: true
+          scope: null
+          template: null
+          type: string
+        - auto_generate: null
+          default: null
+          form: llm
+          human_description:
+            en_US: JSON fields to be parsed
+            ja_JP: JSON fields to be parsed
+            pt_BR: JSON fields to be parsed
+            zh_Hans: 需要解析的 JSON 字段
+          label:
+            en_US: JSON filter
+            ja_JP: JSON filter
+            pt_BR: JSON filter
+            zh_Hans: JSON解析对象
+          llm_description: JSON fields to be parsed
+          max: null
+          min: null
+          name: json_filter
+          options: []
+          placeholder: null
+          precision: null
+          required: true
+          scope: null
+          template: null
+          type: string
+        - auto_generate: null
+          default: 1
+          form: form
+          human_description:
+            en_US: Ensure the JSON output is ASCII encoded
+            ja_JP: Ensure the JSON output is ASCII encoded
+            pt_BR: Ensure the JSON output is ASCII encoded
+            zh_Hans: 确保输出的 JSON 是 ASCII 编码
+          label:
+            en_US: Ensure ASCII
+            ja_JP: Ensure ASCII
+            pt_BR: Ensure ASCII
+            zh_Hans: 确保 ASCII
+          llm_description: ''
+          max: null
+          min: null
+          name: ensure_ascii
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: boolean
+        params:
+          content: ''
+          ensure_ascii: ''
+          json_filter: ''
+        provider_id: langgenius/json_process/json_process
+        provider_name: langgenius/json_process/json_process
+        provider_type: builtin
+        selected: false
+        title: JSON Parse(status)
+        tool_configurations:
+          ensure_ascii: 1
+        tool_description: A tool for extracting JSON objects
+        tool_label: JSON Parse
+        tool_name: parse
+        tool_parameters:
+          content:
+            type: mixed
+            value: '{{#1746865820527.text#}}'
+          json_filter:
+            type: mixed
+            value: status
+        type: tool
+      height: 89
+      id: '1746865864176'
+      position:
+        x: 1285
+        y: 282
+      positionAbsolute:
+        x: 1285
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        desc: ''
+        is_team_authorization: true
+        output_schema: null
+        paramSchemas:
+        - auto_generate: null
+          default: null
+          form: llm
+          human_description:
+            en_US: JSON data
+            ja_JP: JSON data
+            pt_BR: JSON数据
+            zh_Hans: JSON数据
+          label:
+            en_US: JSON data
+            ja_JP: JSON data
+            pt_BR: JSON data
+            zh_Hans: JSON数据
+          llm_description: JSON data to be processed
+          max: null
+          min: null
+          name: content
+          options: []
+          placeholder: null
+          precision: null
+          required: true
+          scope: null
+          template: null
+          type: string
+        - auto_generate: null
+          default: null
+          form: llm
+          human_description:
+            en_US: JSON fields to be parsed
+            ja_JP: JSON fields to be parsed
+            pt_BR: JSON fields to be parsed
+            zh_Hans: 需要解析的 JSON 字段
+          label:
+            en_US: JSON filter
+            ja_JP: JSON filter
+            pt_BR: JSON filter
+            zh_Hans: JSON解析对象
+          llm_description: JSON fields to be parsed
+          max: null
+          min: null
+          name: json_filter
+          options: []
+          placeholder: null
+          precision: null
+          required: true
+          scope: null
+          template: null
+          type: string
+        - auto_generate: null
+          default: 1
+          form: form
+          human_description:
+            en_US: Ensure the JSON output is ASCII encoded
+            ja_JP: Ensure the JSON output is ASCII encoded
+            pt_BR: Ensure the JSON output is ASCII encoded
+            zh_Hans: 确保输出的 JSON 是 ASCII 编码
+          label:
+            en_US: Ensure ASCII
+            ja_JP: Ensure ASCII
+            pt_BR: Ensure ASCII
+            zh_Hans: 确保 ASCII
+          llm_description: ''
+          max: null
+          min: null
+          name: ensure_ascii
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: boolean
+        params:
+          content: ''
+          ensure_ascii: ''
+          json_filter: ''
+        provider_id: langgenius/json_process/json_process
+        provider_name: langgenius/json_process/json_process
+        provider_type: builtin
+        selected: false
+        title: JSON Parse(message)
+        tool_configurations:
+          ensure_ascii: 1
+        tool_description: A tool for extracting JSON objects
+        tool_label: JSON Parse
+        tool_name: parse
+        tool_parameters:
+          content:
+            type: mixed
+            value: '{{#1746865820527.text#}}'
+          json_filter:
+            type: mixed
+            value: message
+        type: tool
+      height: 89
+      id: '1746865884276'
+      position:
+        x: 1285
+        y: 410
+      positionAbsolute:
+        x: 1285
+        y: 410
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        desc: ''
+        selected: false
+        template: "{% if status == \"200\" %}\r\n## 下記のデータに追加しました\r\n{{ llm_output\
+          \ }}\r\n{% else %}\r\n## 下記のエラーが発生しました\r\n{{ message }}\r\n{% endif %}"
+        title: テンプレート
+        type: template-transform
+        variables:
+        - value_selector:
+          - '1746865396067'
+          - text
+          variable: llm_output
+        - value_selector:
+          - '1746865884276'
+          - text
+          variable: message
+        - value_selector:
+          - '1746865864176'
+          - text
+          variable: status
+      height: 53
+      id: '1746865907715'
+      position:
+        x: 1589
+        y: 282
+      positionAbsolute:
+        x: 1589
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    viewport:
+      x: -1606
+      y: 217
+      zoom: 1
